@@ -2,7 +2,7 @@
 
 ## Setup
 
-Available configurations: https://www.vaultproject.io/api/secret/ssh/index.html
+Available configurations for OTP or CA roles: https://www.vaultproject.io/api/secret/ssh/index.html
 
 Run some setup scripts
 
@@ -79,8 +79,27 @@ local directory and mount it to the Docker container.
   > vault read -field=public_key ssh/config/ca > keys/trusted-user-ca-keys.pem
 ```
 
-Now we'll bring up the CA client.
-
+Now we'll bring up the CA client:
 ```
   > ./ca-client.sh
+```
+
+Create a role:
+```
+  > vault write ssh/roles/user-role @roles/user-role.json
+  > vault read ssh/roles/user-role
+```
+
+### Sign the local ssh key
+
+Lets take a look at the signed public key and the serial number
+```
+  > vault write ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub
+```
+
+Now we'll just write the signed key to a file, this file name will automatically
+be used by OpenSSH (pretty cool)
+```
+  > vault write -field=signed_key ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
+  > chmod 600 ~/.ssh/id_rsa-cert.pub
 ```
