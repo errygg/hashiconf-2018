@@ -48,12 +48,6 @@ ssh into the client
 
 ## SSH CA
 
-Setup CA client
-
-```
-  > ./setup-ca-client.sh
-```
-
 Enable the Vault Certificate Authority
 
 ```
@@ -61,14 +55,32 @@ Enable the Vault Certificate Authority
 ```
 
 Key pair can be specified if you have your own
+
+To do so you'd run:
+```
+  > vault write ssh/config/ca private_key=your_private_key public_key=your_public_key
+```
+
 Public key is accessible via the /public_key endpoint
+
+```
+  > curl http://localhost:8200/v1/ssh/public_key
+```
 
 ### Add the CA key to a client
 
 Typically the CA key would be added via some config management tool or
-added via AWS cloud init, baked into the image/AMI, but not manually. So, we're
-gonna add it manually...
+added via AWS cloud init, baked into the image/AMI, etc. We are gonna use a
+local directory and mount it to the Docker container.
 
 ```
-  > curl -o /etc/ssh/trusted-user-ca-keys.pem http://172.18.0.2:8200/v1/ssh-client-signer/public_key
+  > cd devopsdays-denver-2018/scripts
+  > mkdir keys
+  > vault read -field=public_key ssh/config/ca > keys/trusted-user-ca-keys.pem
+```
+
+Now we'll bring up the CA client.
+
+```
+  > ./ca-client.sh
 ```
