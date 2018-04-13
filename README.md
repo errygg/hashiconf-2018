@@ -4,6 +4,12 @@
 
 Available configurations for OTP or CA roles: https://www.vaultproject.io/api/secret/ssh/index.html
 
+First, cleanup old items from prior testing
+
+```
+  > ./cleanup.sh
+```
+
 Run some setup scripts
 
 ```
@@ -56,7 +62,6 @@ Enable the Vault Certificate Authority
 
 Key pair can be specified if you have your own
 
-To do so you'd run:
 ```
   > vault write ssh/config/ca private_key=@your_private_key_file public_key=@your_public_key_file
 ```
@@ -78,17 +83,21 @@ file into a Vagrant VM.
   > vault read -field=public_key ssh/config/ca > trusted-user-ca-keys.pem
 ```
 
-Now we'll bring up the CA client:
+Now we'll bring up the CA client
+
 ```
   > ./ca-client.sh
 ```
 
-Test that we can't actually ssh to the node via the ubuntu user:
+Test that we can't actually ssh to the node via the ubuntu user
+
 ```
+  > vagrant port
   > ssh ubuntu@localhost -p 2222
 ```
 
-Create a role:
+Create a role
+
 ```
   > vault write ssh/roles/user-role @roles/user-role.json
   > vault read ssh/roles/user-role
@@ -97,12 +106,13 @@ Create a role:
 ### Sign the local ssh key
 
 Lets take a look at the signed public key and the serial number
+
 ```
   > vault write ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub
 ```
 
-Now we'll just write the signed key to a file, this file name will automatically
-be used by OpenSSH (pretty cool)
+Now we'll just write the signed key to a file
+
 ```
   > vault write -field=signed_key ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
   > chmod 600 ~/.ssh/id_rsa-cert.pub
@@ -110,7 +120,8 @@ be used by OpenSSH (pretty cool)
 
 ### Login
 
-SSH into the instance with our new signed key:
+SSH into the instance with our new signed key
+
 ```
-  > ssh ubuntu@localhost -p 2200
+  > ssh ubuntu@localhost -p <port>
 ```

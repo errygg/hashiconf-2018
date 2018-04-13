@@ -2,8 +2,7 @@
 # vi: set ft=ruby :
 
 $script = <<-SCRIPT
-usermod -aG sudo ubuntu
-echo "TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem" >> /etc/ssh/sshd_config
+echo "\n\nTrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem" >> /etc/ssh/sshd_config
 mv /tmp/trusted-user-ca-keys.pem /etc/ssh/
 chmod 600 /etc/ssh/trusted-user-ca-keys.pem
 service ssh restart
