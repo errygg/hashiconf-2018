@@ -46,11 +46,28 @@ Create a Vault role for the ubuntu user (explain Vault roles)
     cidr_list=172.18.0.0/16
 ```
 
+Get the OTP
+
+```
+  > vault write ssh/creds/otp_role ip=172.18.0.3
+```
+
 ssh into the client
 
 ```
+  > docker port otp-client
   > ssh ubuntu@localhost -p <port>
 ```
+
+Enter the password from the `key` field in the write response above
+
+Take a look at the PAM config
+
+```
+  > cat /etc/ssh/sshd_config
+```
+
+Exit out and try the password again and we'll see you can't login. OTP baby!
 
 ## SSH CA
 

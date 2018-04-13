@@ -1,6 +1,7 @@
 #!/bin/bash
 # Cleanup old objects
 docker container stop vault-server
+docker container stop otp-client
 docker container prune -f
 docker network rm vault-net
 vagrant destroy
