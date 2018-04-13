@@ -1,6 +1,6 @@
 {
   "allow_user_certificates": true,
-  "allowed_users": "*",
+  "allowed_users": "ubuntu",
   "allow_bare_domains": true,
   "allow_subdomains": true,
   "default_extensions": [

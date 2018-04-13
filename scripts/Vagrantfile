@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<-SCRIPT
+useradd -ms /bin/bash ubuntu
+usermod -aG sudo ubuntu
+echo "TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem" >> /etc/ssh/sshd_config
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.provision "file", source: "~/trusted-user-ca-keys.pem", destination: "/etc/ssh/trusted-user-ca-keys.pem"
+  config.vm.provision "shell", inline: $script
+end
