@@ -1,2 +1,2 @@
-scripts/keys/*
+scripts/trusted-user-ca-keys.pem
 scripts/.vagrant/*
