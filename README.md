@@ -77,11 +77,7 @@ Enable the Vault Certificate Authority
   > vault write ssh/config/ca generate_signing_key=true
 ```
 
-Key pair can be specified if you have your own
-
-```
-  > vault write ssh/config/ca private_key=@your_private_key_file public_key=@your_public_key_file
-```
+You can also specify your own private and public keys if you'd like
 
 Public key is accessible via the /public_key endpoint
 
