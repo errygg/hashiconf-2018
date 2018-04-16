@@ -37,6 +37,10 @@ Bring up a client node (show Docker file, explain config)
   > ./otp-client.sh
 ```
 
+Try to ssh to show we can't
+```
+  > ssh ubuntu@localhost -p 2223
+
 Create a Vault role for the ubuntu user (explain Vault roles)
 
 ```
@@ -56,7 +60,7 @@ ssh into the client
 
 ```
   > docker port otp-client
-  > ssh ubuntu@localhost -p <port>
+  > ssh ubuntu@localhost -p 2223
 ```
 
 Enter the password from the `key` field in the write response above
@@ -64,7 +68,7 @@ Enter the password from the `key` field in the write response above
 Take a look at the PAM config
 
 ```
-  > cat /etc/ssh/sshd_config
+  > cat /etc/pam.d/sshd
 ```
 
 Exit out and try the password again and we'll see you can't login. OTP baby!
@@ -79,7 +83,7 @@ Enable the Vault Certificate Authority
 
 You can also specify your own private and public keys if you'd like
 
-Public key is accessible via the /public_key endpoint
+Public key is accessible via the `/public_key` endpoint
 
 ```
   > curl http://localhost:8200/v1/ssh/public_key
@@ -105,7 +109,6 @@ Now we'll bring up the CA client
 Test that we can't actually ssh to the node via the ubuntu user
 
 ```
-  > vagrant port
   > ssh ubuntu@localhost -p 2222
 ```
 
@@ -118,13 +121,7 @@ Create a role
 
 ### Sign the local ssh key
 
-Lets take a look at the signed public key and the serial number
-
-```
-  > vault write ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub
-```
-
-Now we'll just write the signed key to a file
+We'll just write the signed key to a file
 
 ```
   > vault write -field=signed_key ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
