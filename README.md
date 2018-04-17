@@ -38,8 +38,11 @@ Bring up a client node (show Docker file, explain config)
 ```
 
 Try to ssh to show we can't
+
 ```
   > ssh ubuntu@localhost -p 2223
+```
+
 
 Create a Vault role for the ubuntu user (explain Vault roles)
 
