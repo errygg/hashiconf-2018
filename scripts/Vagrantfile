@@ -9,6 +9,7 @@ service ssh restart
 SCRIPT
 
 Vagrant.configure("2") do |config|
+  config.vm.box_check_update = false
   config.vm.box = "ubuntu/trusty64"
   config.vm.provision "file", source: "./trusted-user-ca-keys.pem", destination: "/tmp/trusted-user-ca-keys.pem"
   config.vm.provision "shell",
