@@ -1,4 +1,4 @@
-# Vault SSH for DevOpsDays
+# Vault SSH for HashiConf 2018
 
 ## Setup
 
