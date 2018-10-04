@@ -11,8 +11,8 @@ consul_url = "https://s3-us-west-2.amazonaws.com/errygg-ent-binaries/consul-ente
 consul_ent_url = "https://s3-us-west-2.amazonaws.com/errygg-ent-binaries/consul-enterprise_1.2.3%2Bprem_linux_amd64.zip"
 consul_os = "Ubuntu"
 consul_os_version = "16.04"
-# Only for Quick Start
-consul_image_id = "ami-06df494fbd695b854"
+# Found here: https://cloud-images.ubuntu.com/locator/ec2/, https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#LaunchInstanceWizard:ami=ami-0e32ec5bc225539f5
+consul_image_id = "ami-0e32ec5bc225539f5"
 consul_public = false
 consul_tags = {"owner" = "Erik R. Rygg", "project" = "HashiConf 2018"}
 vault_servers = 3
@@ -23,7 +23,7 @@ vault_url = "https://s3-us-west-2.amazonaws.com/errygg-ent-binaries/vault-enterp
 vault_ent_url = "https://s3-us-west-2.amazonaws.com/errygg-ent-binaries/vault-enterprise_0.11.2%2Bprem_linux_amd64.zip"
 vault_os = "Ubuntu"
 vault_os_version = "16.04"
-# Only for Quick Start
-vault_image_id = "ami-06df494fbd695b854"
+# Found here: https://cloud-images.ubuntu.com/locator/ec2/, https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#LaunchInstanceWizard:ami=ami-0e32ec5bc225539f5
+vault_image_id = "ami-0e32ec5bc225539f5" 
 vault_public = true
 vault_tags = {"owner" = "Erik R. Rygg", "project" = "HashiConf 2018"}
