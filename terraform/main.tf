@@ -1,3 +1,3 @@
 module "ssh-clients" {
-  source = "./modules"
+  source = "./modules/terraform-aws-ssh-client"
 }
