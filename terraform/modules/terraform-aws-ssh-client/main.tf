@@ -23,7 +23,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "ssh-otp-client" {
+resource "aws_instance" "otp_client" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
 
