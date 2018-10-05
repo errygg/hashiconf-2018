@@ -28,9 +28,9 @@ resource "aws_instance" "ssh-otp-client" {
   instance_type = "t2.micro"
 
   user_data = "./scripts/user_data.sh"
-  subnet_id = "${terraform_remote_state.secrets.subnet_public_ids.0.id}"
+  subnet_id = "${data.terraform_remote_state.secrets.subnet_public_ids.0.id}"
   vpc_security_group_ids = [
-    "${terraform_remote_state.secrets.bastion_security_group}"
+    "${data.terraform_remote_state.secrets.bastion_security_group}"
   ]
 }
 
