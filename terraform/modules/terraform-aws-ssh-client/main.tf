@@ -1,5 +1,12 @@
 provider "aws" {}
 
+data "terraform_remote_state" "secrets" {
+  backend = "atlas"
+  config {
+    name = "erik-rygg/secrets-aws-dev-us-west-2-quick"
+  }
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -21,10 +28,14 @@ resource "aws_instance" "ssh-otp-client" {
   instance_type = "t2.micro"
 
   user_data = "./scripts/user_data.sh"
+  subnet_id = "${terraform_remote_state.secrets.subnet_public_ids.0.id}"
+  vpc_security_group_ids = [
+    "${terraform_remote_state.secrets.bastion_security_group}"
+  ]
 }
 
-resource "aws_instance" "ssh-ca-client" {
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "t2.micro"
-}
+// resource "aws_instance" "ssh-ca-client" {
+//   ami           = "${data.aws_ami.ubuntu.id}"
+//   instance_type = "t2.micro"
+// }
 
