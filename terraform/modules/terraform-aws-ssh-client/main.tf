@@ -27,6 +27,7 @@ resource "aws_instance" "ssh-otp-client" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
 
+  key_name               = "${data.terraform_remote_state.secrets.ssh_key_name}"
   user_data              = "./scripts/user_data.sh"
   subnet_id              = "${data.terraform_remote_state.secrets.subnet_public_ids.0}"
   vpc_security_group_ids = [

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Update packages and install vault-ssh-helper"
 apt-get update
 apt-get install -y unzip
 mkdir -p /etc/vault-ssh-helper.d
@@ -7,6 +8,36 @@ mkdir -p /usr/local/bin
 cd /usr/local/bin
 wget https://releases.hashicorp.com/vault-ssh-helper/0.1.4/vault-ssh-helper_0.1.4_linux_amd64.zip -O tmp.zip && unzip tmp.zip && rm tmp.zip
 
+echo "Setup Consul user"
+export GROUP=consul
+export USER=consul
+export COMMENT=Consul
+export HOME=/srv/consul
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash
+
+echo "Install Consul"
+export VERSION=${consul_version}
+export URL=${consul_url}
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul.sh | bash
+
+echo "Install Consul Systemd"
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul-systemd.sh | bash
+
+echo "Cleanup install files"
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/cleanup.sh | bash
+
+echo "Set variables"
+CONSUL_CONFIG_FILE=/etc/consul.d/default.json
+CONSUL_CONFIG_OVERRIDE_FILE=/etc/consul.d/z-override.json
+NODE_NAME=$(hostname)
+
+echo "Update Consul configuration file permissions"
+sudo chown consul:consul $CONSUL_CONFIG_FILE
+
+echo "Restart Consul"
+sudo systemctl restart consul
+
+echo "Create vault-ssh-helper configuration"
 cat << EOF > /etc/vault-ssh-helper.d/config.hcl
 vault_addr = "https://vault.erikrygg.com"
 ssh_mount_point = "ssh"
@@ -14,6 +45,7 @@ tls_skip_verify = false
 allowed_roles = "client_otp_dev_role"
 EOF
 
+echo "Create PAM sshd configuration"
 cat << EOF > /etc/pam.d/sshd
 auth requisite pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -config=/etc/vault-ssh-helper.d/config.hcl -dev
 auth optional pam_unix.so not_set_pass use_first_pass nodelay
@@ -33,6 +65,7 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_
 @include common-password
 EOF
 
+echo "Create sshd configuration"
 cat << EOF > /etc/ssh/sshd_config
 Port 22
 Protocol 2
@@ -66,5 +99,8 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 UsePAM yes
 EOF
 
+echo "Create ubuntu user"
 useradd -ms /bin/bash ubuntu
 usermod -aG sudo ubuntu
+
+${user_data}
