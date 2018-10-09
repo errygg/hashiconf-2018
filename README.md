@@ -6,157 +6,116 @@ This repo holds the notes, slides, and configurations for my talk at HashiConf 2
 
 The demo for this talk includes an enterprise versions of Vault and Consul using Terraform Enterprise (https://app.terraform.io) to setup all the infrastructure. More specifically, the following explains the setup:
 
-* Vault and Consul talk to each other using TLS
 * 3 node Vault cluster with a 3 node Consul cluster
 * Vault is publicly accessible via AWS load balancer endpoint
 * Consul is only accessible to Vault
+* Terraform is used to setup the Vault LDAP configuration
+* Terraform is used to setup the Vault SSH Secrets Engine and associated roles
 
 The Terraform workspace used to build the Vault/Consul cluster is located at: https://github.com/errygg/vault-guides/tree/master/operations/provision-vault/quick-start/terraform-aws. The following is a screenshot of the variables set for this project:
 
 TODO: screenshot of Terraform Enterprise variables in the `secrets-aws-dev-us-west-2` workspace
 
-Additionally, the modules in this repo were created to connect the Vault LDAP backend to [JumpCloud](https://jumpcloud.com/). This module uses resources in the [JumpCloud Terraform module](https://github.com/geekmuse/terraform-provider-jumpcloud) to create users in LDAP. 
+> Note: This demo uses resources in the [JumpCloud Terraform module](https://github.com/geekmuse/terraform-provider-jumpcloud) to create users in LDAP.
+
+> Note: This demo was performed using Terraform Enterprise; however, the same
+demo can be accomplished using Terraform OSS using the `terraform` command in
+place of `tfe-cli` command or UI.
+
+This demo uses configuration for Vault SSH found here: https://www.vaultproject.io/api/secret/ssh/index.html
+
+### Configure Vault
+
+1. Run terraform to configure the SSH engine and LDAP authentication
+
+```bash
+  > cd ./terraform
+  > export JUMPCLOUD_API_TOKEN=""
+  > tfe-cli plan --target=module.vault_ldap
+```
 
 ### OTP Client
+TODO: run these commands via the Terraform Enterprise CLI
 
-
-### CA Client
-
-## Vault
-
-### Authentication
-
-Authentication for users is done using JumpCloud LDAP. In order to login to Vault ensure a username and password are created in JumpCloud (should be setup with the the module inside this repo).
-
-To login via LDAP credentials:
+1. Spin up the OTP client
 
 ```bash
-  > export VAULT_ADDRESS=(load_balancer_address_from_TFE_outputs)
-  TODO: setup the rest here
+  > cd ./terraform
+  > tfe-cli plan --target=module.ssh_client_otp
+  > tfe-cli apply --target=module.ssh_client_otp
 ```
 
-### SSH Secrets Engine
-
-Available configurations for OTP or CA roles: https://www.vaultproject.io/api/secret/ssh/index.html
-
-Show the server is up
+2. Authenticate with Vault using LDAP
 
 ```bash
-  > vault status
+  > export VAULT_ADDR=""
+  > export VAULT_TOKEN=`vault login -method=ldap -username=errygg -token-only`
 ```
 
-Enable the ssh Secret engine backend (explain Vault engines)
+3. Get the OTP for the client
 
 ```bash
-  > vault secrets enable ssh
+  > vault write ssh/creds/otp_role ip="<public_ip_address_for_otp_client>"
 ```
 
-#### SSH OTP
+4. SSH into the client
 
-Bring up a client node (show Docker file, explain config)
-
-```
-  > ./otp-client.sh
+```bash
+  > ssh ubuntu@<public_ip_address_for_otp_client>
 ```
 
-Try to ssh to show we can't
+Enter the password from the `key` field in the write response from step 3.
 
-```
-  > ssh ubuntu@localhost -p 2223
-```
+5. `cat` out the PAM config
 
-
-Create a Vault role for the ubuntu user (explain Vault roles)
-
-```
-  > vault write ssh/roles/otp_role\
-    key_type=otp\
-    default_user=ubuntu\
-    cidr_list=172.18.0.0/16
-```
-
-Get the OTP
-
-```
-  > vault write ssh/creds/otp_role ip=172.18.0.3
-```
-
-ssh into the client
-
-```
-  > docker port otp-client
-  > ssh ubuntu@localhost -p 2223
-```
-
-Enter the password from the `key` field in the write response above
-
-Take a look at the PAM config
-
-```
+```bash
   > cat /etc/pam.d/sshd
 ```
 
 Exit out and try the password again and we'll see you can't login. OTP baby!
 
-#### SSH CA
+### CA Client
+TODO: run the Terraform steps in the Terraform UI, show screenshots
 
-Enable the Vault Certificate Authority
+1. Authenticate with Vault using LDAP
 
+```bash
+  > export VAULT_ADDR=""
+  > export VAULT_TOKEN=`vault login -method=ldap -username=errygg`
 ```
-  > vault write ssh/config/ca generate_signing_key=true
-```
 
-You can also specify your own private and public keys if you'd like
+2. Public key is accessible via the `/public_key` endpoint
 
-Public key is accessible via the `/public_key` endpoint
-
-```
+```bash
   > curl http://localhost:8200/v1/ssh/public_key
 ```
 
-##### Add the CA key to a client
+3. Spin up the CA client (this will pull in this new public_key via User Data)
 
-Typically the CA key would be added via some config management tool or
-added via AWS cloud init, baked into the image/AMI, etc. We are gonna copy the
-file into a Vagrant VM.
-
-```
-  > cd devopsdays-denver-2018/scripts/
-  > vault read -field=public_key ssh/config/ca > trusted-user-ca-keys.pem
+```bash
+  > cd ./terraform
+  > tfe-cli plan --target=module.ssh_client_ca
+  > tfe-cli apply --target=module.ssh_client_ca
 ```
 
-Now we'll bring up the CA client
+> Note: The CA can be added via configuration management as well, here we are
+using AWS user data.
 
-```
-  > ./ca-client.sh
-```
+4. Test that we can't actually ssh to the node via the ubuntu user
 
-Test that we can't actually ssh to the node via the ubuntu user
-
-```
-  > ssh ubuntu@localhost -p 2222
+```bash
+  > ssh ubuntu@<public_ip_for_ca_client>
 ```
 
-Create a role
+6. Sign the local ssh key
 
-```
-  > vault write ssh/roles/user-role @roles/user-role.json
-  > vault read ssh/roles/user-role
-```
-
-##### Sign the local ssh key
-
-We'll just write the signed key to a file
-
-```
+```bash
   > vault write -field=signed_key ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
   > chmod 600 ~/.ssh/id_rsa-cert.pub
 ```
 
-##### Login
+7. SSH into the instance with our new signed key
 
-SSH into the instance with our new signed key
-
-```
-  > ssh ubuntu@localhost -p <port>
+```bash
+  > ssh ubuntu@<public_ip_for_ca_client>
 ```

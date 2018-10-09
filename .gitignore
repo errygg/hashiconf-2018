@@ -1,2 +1,9 @@
-scripts/trusted-user-ca-keys.pem
-scripts/.vagrant/*
+*.tfstate
+*.tfstate*
+**/.terraform
+**/terraform.tfstate
+**/terraform.tfstate.backup
+*.tfstate.lock.info
+*.tfvars
+*.DS_Store
+*.pem

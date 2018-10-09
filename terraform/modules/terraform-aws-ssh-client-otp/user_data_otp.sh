@@ -1,13 +1,17 @@
 #!/bin/bash
+# User Data script used to setup the target OTP host. This could also be done
+# using a configuration management tool such as Chef, Ansible, etc.
 
+#
+# Update the packages
+#
 echo "Update packages and install vault-ssh-helper"
 apt-get update
 apt-get install -y unzip
-mkdir -p /etc/vault-ssh-helper.d
-mkdir -p /usr/local/bin
-cd /usr/local/bin
-wget https://releases.hashicorp.com/vault-ssh-helper/0.1.4/vault-ssh-helper_0.1.4_linux_amd64.zip -O tmp.zip && unzip tmp.zip && rm tmp.zip
 
+#
+# Setup the Consul user
+#
 echo "Setup Consul user"
 export GROUP=consul
 export USER=consul
@@ -15,6 +19,9 @@ export COMMENT=Consul
 export HOME=/srv/consul
 curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash
 
+#
+# Install and configure Consul
+#
 echo "Install Consul"
 export VERSION=${consul_version}
 export URL=${consul_url}
@@ -37,6 +44,14 @@ sudo chown consul:consul $CONSUL_CONFIG_FILE
 echo "Restart Consul"
 sudo systemctl restart consul
 
+#
+# Install and configure the vault-ssh-helper
+#
+mkdir -p /etc/vault-ssh-helper.d
+mkdir -p /usr/local/bin
+cd /usr/local/bin
+wget https://releases.hashicorp.com/vault-ssh-helper/0.1.4/vault-ssh-helper_0.1.4_linux_amd64.zip -O tmp.zip && unzip tmp.zip && rm tmp.zip
+
 echo "Create vault-ssh-helper configuration"
 cat << EOF > /etc/vault-ssh-helper.d/config.hcl
 vault_addr = "https://vault.erikrygg.com"
@@ -45,6 +60,9 @@ tls_skip_verify = false
 allowed_roles = "client_otp_dev_role"
 EOF
 
+#
+# Update the PAM configuration to use the vault-ssh-helper
+#
 echo "Create PAM sshd configuration"
 cat << EOF > /etc/pam.d/sshd
 auth requisite pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -config=/etc/vault-ssh-helper.d/config.hcl -dev
