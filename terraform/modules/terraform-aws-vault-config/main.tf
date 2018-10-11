@@ -1,13 +1,11 @@
 provider "vault" {}
 
-provider "jumpcloud" {
-  api_key = "${var.jumpcloud_api_key}"
+resource "vault_auth_backend" "userpass" {
+  type        = "userpass"
+  description = "Enable `userpass` authentication"
 }
 
-# TODO: configure Vault SSH Secrets Engine
-
-# TODO: create JumpCloud user
-
-# TODO: configure Vault LDAP Authentication with new JumpCloud user
-
-# TODO: create role for CA and OTP
+resource "vault_mount" "ssh" {
+  type        = "ssh"
+  description = "SSH Vault Mount"
+}
