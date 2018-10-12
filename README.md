@@ -26,36 +26,26 @@ This demo uses configuration for Vault SSH found here: https://www.vaultproject.
 
 ### Configure Vault
 
-1. Run terraform to configure the SSH engine and LDAP authentication
+1. Run terraform to configure Vault SSH backend and users
 
 ```bash
-  > cd ./terraform
-  > export JUMPCLOUD_API_TOKEN=""
-  > tfe-cli plan --target=module.vault_ldap
+  > cd ./scripts
+  > . ./vault_env.sh <Vault URL> <JSON file downloaded from unsealing Vault>
+  > ./configure_vault.sh
 ```
 
 ### OTP Client
+
 TODO: run these commands via the Terraform Enterprise CLI
 
 1. Spin up the OTP client
 
-```bash
-  > cd ./terraform
-  > tfe plan --target=module.ssh_client_otp
-  > tfe apply --target=module.ssh_client_otp
-```
-
-2. Authenticate with Vault using LDAP
-
-```bash
-  > export VAULT_ADDR=""
-  > export VAULT_TOKEN=`vault login -method=ldap -username=errygg -token-only`
-```
+2. Create the OTP role for the `web-developers` users
 
 3. Get the OTP for the client
 
 ```bash
-  > vault write ssh/creds/otp_role ip="<public_ip_address_for_otp_client>"
+  > vault write ssh/creds/ ip="<public_ip_address_for_otp_client>"
 ```
 
 4. SSH into the client
