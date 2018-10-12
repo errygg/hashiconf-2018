@@ -15,13 +15,13 @@ echo "Create vault-ssh-helper configuration"
 cat << EOF > /etc/vault-ssh-helper.d/config.hcl
 vault_addr = "http://${vault_addr}"
 ssh_mount_point = "${workspace}/ssh"
-tls_skip_verify = true
+tls_skip_verify = false
 allowed_roles = "*"
 EOF
 
 echo "Update PAM sshd configuration"
 
-sed -i 's/@include common-auth/#@include common-auth/' /etc/pam.d/sshd
+#sed -i 's/@include common-auth/#@include common-auth/' /etc/pam.d/sshd
 sed -i '/#@include common-auth/ i\
 auth requisite pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -config=/etc/vault-ssh-helper.d/config.hcl\
 auth optional pam_unix.so not_set_pass use_first_pass nodelay' /etc/pam.d/sshd
@@ -29,6 +29,7 @@ auth optional pam_unix.so not_set_pass use_first_pass nodelay' /etc/pam.d/sshd
 echo "Update sshd configuration"
 sed -i '/ChallengeResponseAuthentication/ s/no/yes/' /etc/ssh/sshd_config
 sed -i '/UsePAM/ s/no/yes/' /etc/ssh/sshd_config
+sed -i '/PasswordAuthentication/ s/no/yes/' /etc/ssh/sshd_config
 
 service sshd restart
 
