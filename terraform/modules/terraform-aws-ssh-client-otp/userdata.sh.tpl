@@ -120,5 +120,3 @@ EOF
 echo "Create ubuntu user"
 useradd -ms /bin/bash ubuntu
 usermod -aG sudo ubuntu
-
-${user_data}

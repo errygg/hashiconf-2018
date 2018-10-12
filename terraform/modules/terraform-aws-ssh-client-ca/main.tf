@@ -23,8 +23,8 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-data "template_file" "user_data" {
-  template = "${file("${path.module}/user_data.sh.tpl")}"
+data "template_file" "userdata" {
+  template = "${file("${path.module}/userdata.sh.tpl")}"
   
   vars {
     consul_version  = "${var.consul_version}"
@@ -40,7 +40,7 @@ resource "aws_instance" "ca_client" {
   instance_type = "t2.micro"
 
   key_name               = "${data.terraform_remote_state.secrets.ssh_key_name}"
-  user_data              = "${data.template_file.user_data.rendered}"
+  user_data              = "${data.template_file.userdata.rendered}"
   subnet_id              = "${data.terraform_remote_state.secrets.subnet_public_ids.0}"
   vpc_security_group_ids = [
     "${data.terraform_remote_state.secrets.bastion_security_group}"
