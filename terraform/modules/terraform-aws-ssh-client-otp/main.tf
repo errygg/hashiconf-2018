@@ -24,12 +24,11 @@ data "aws_ami" "ubuntu" {
 }
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/user_data.sh.tpl")}"
+  template = "${file("${path.module}/userdata.sh.tpl")}"
   
   vars {
     consul_version  = "${var.consul_version}"
     consul_url      = "${var.consul_url}"
-    trusted_user_ca = "${var.trusted_user_ca}"
   }
 }
 
