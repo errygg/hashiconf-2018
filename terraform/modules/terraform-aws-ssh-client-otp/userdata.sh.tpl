@@ -62,7 +62,7 @@ ServerKeyBits 1024
 SyslogFacility AUTH
 LogLevel INFO
 LoginGraceTime 120
-PermitRootLogin no
+PermitRootLogin yes
 StrictModes yes
 RSAAuthentication yes
 PubkeyAuthentication yes
@@ -70,9 +70,9 @@ IgnoreRhosts yes
 RhostsRSAAuthentication no
 HostbasedAuthentication no
 PermitEmptyPasswords no
-ChallengeResponseAuthentication no
-PasswordAuthentication no
-X11Forwarding no
+ChallengeResponseAuthentication yes
+PasswordAuthentication yes
+X11Forwarding yes
 X11DisplayOffset 10
 PrintMotd no
 PrintLastLog yes
