@@ -2,7 +2,7 @@
 # Required Variables
 #
 
-variable "key_name" {
+variable "ssh_key_name" {
   description = "SSH key name"
   type        = "string"
 }
