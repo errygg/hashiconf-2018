@@ -1,8 +1,9 @@
 #
 # Required Variables
 #
-variable "" {
-  description = ""
+variable "jumpcloud_api_key" {
+  description = "JumpCloud API key"
+  default = "
 }
 
 #

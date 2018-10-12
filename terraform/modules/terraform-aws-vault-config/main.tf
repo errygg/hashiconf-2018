@@ -9,3 +9,4 @@ resource "vault_mount" "ssh" {
   type        = "ssh"
   description = "SSH Vault Mount"
 }
+

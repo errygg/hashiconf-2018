@@ -41,8 +41,8 @@ TODO: run these commands via the Terraform Enterprise CLI
 
 ```bash
   > cd ./terraform
-  > tfe-cli plan --target=module.ssh_client_otp
-  > tfe-cli apply --target=module.ssh_client_otp
+  > tfe plan --target=module.ssh_client_otp
+  > tfe apply --target=module.ssh_client_otp
 ```
 
 2. Authenticate with Vault using LDAP
