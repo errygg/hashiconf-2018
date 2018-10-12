@@ -7,8 +7,10 @@ with the demo for my talk at HashiConf 2018 -
 ## Variables
 | Name | Description |
 |------|-------------|
-| consul_version | Version of Consul to install |
-| consul_url | URL of the Consul binary (OSS or enterprise) |
+| key_name | SSH key name |
+| subnet_id | Subnet ID to place this instance in |
+| vault_addr | URL of the Vault server to do OTP lookups with |
+| vpc_security_group_ids | Security group ID(s) |
 
 ## Outputs
 

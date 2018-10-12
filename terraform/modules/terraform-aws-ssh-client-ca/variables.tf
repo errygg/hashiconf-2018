@@ -1,18 +1,22 @@
 #
 # Required Variables
 #
-variable "consul_version" {
-  description = "Version of Consul to install"
+variable "key_name" {
+  description = "SSH key name"
+  type        = "string"
 }
 
-variable "consul_url" {
-  description = "URL of the Consul binary (OSS or enterprise)"
+variable "subnet_id" {
+  description = "Subnet ID to place this instance in"
+  type        = "string"
 }
 
 variable "trusted_user_ca" {
   description = "File contents of the Vault SSH CA"
+  type        = "string"
 }
 
-#
-# Optional Variables
-#
+variable "vpc_security_group_ids" {
+  description = "Security group ID(s)"
+  type        = "list"
+}

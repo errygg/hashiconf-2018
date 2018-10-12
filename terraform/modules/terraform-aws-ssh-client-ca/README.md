@@ -6,9 +6,10 @@ for my talk at HashiConf 2018 - [Manage SSH with HashiCorp Vault]().
 ## Variables
 | Name | Description |
 |------|-------------|
-| consul_version | Version of Consul to install |
-| consul_url | URL of the Consul binary (OSS or enterprise) |
+| key_name | SSH key name |
+| subnet_id | Subnet ID to place this instance in |
 | trusted_user_ca | File contents of the Vault SSH CA |
+| vpc_security_group_ids | Security group ID(s) |
 
 
 ## Outputs

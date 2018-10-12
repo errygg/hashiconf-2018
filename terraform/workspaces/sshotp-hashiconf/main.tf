@@ -1,5 +1,15 @@
+data "terraform_remote_state" "vault" {
+  backend = "atlas"
+  config {
+    name = "${var.org}/${var.workspace}"
+  }
+}
+
 module "ssh_client_otp" {
-  source         = "../../modules/terraform-aws-ssh-client-otp"
-  consul_version = "${var.consul_version}"
-  consul_url     = "${var.consul_url}"
+  source = "../../modules/terraform-aws-ssh-client-otp"
+  
+  key_name               = "${data.terraform_remote_state.vault.ssh_key_name}"
+  subnet_id              = "${data.terraform_remote_state.vault.subnet_public_ids.0}"
+  vault_addr             = "${data.terraform_remote_state.vault.vault_lb_dns}"
+  vpc_security_group_ids = ["${data.terraform_remote_state.secrets.bastion_security_group}"]
 }

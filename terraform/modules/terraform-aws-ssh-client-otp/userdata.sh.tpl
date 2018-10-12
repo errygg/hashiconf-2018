@@ -10,41 +10,6 @@ apt-get update
 apt-get install -y unzip
 
 #
-# Setup the Consul user
-#
-echo "Setup Consul user"
-export GROUP=consul
-export USER=consul
-export COMMENT=Consul
-export HOME=/srv/consul
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash
-
-#
-# Install and configure Consul
-#
-echo "Install Consul"
-export VERSION=${consul_version}
-export URL=${consul_url}
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul.sh | bash
-
-echo "Install Consul Systemd"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul-systemd.sh | bash
-
-echo "Cleanup install files"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/cleanup.sh | bash
-
-echo "Set variables"
-CONSUL_CONFIG_FILE=/etc/consul.d/default.json
-CONSUL_CONFIG_OVERRIDE_FILE=/etc/consul.d/z-override.json
-NODE_NAME=$(hostname)
-
-echo "Update Consul configuration file permissions"
-sudo chown consul:consul $CONSUL_CONFIG_FILE
-
-echo "Restart Consul"
-sudo systemctl restart consul
-
-#
 # Install and configure the vault-ssh-helper
 #
 mkdir -p /etc/vault-ssh-helper.d
@@ -54,7 +19,7 @@ wget https://releases.hashicorp.com/vault-ssh-helper/0.1.4/vault-ssh-helper_0.1.
 
 echo "Create vault-ssh-helper configuration"
 cat << EOF > /etc/vault-ssh-helper.d/config.hcl
-vault_addr = "https://vault.erikrygg.com"
+vault_addr = "${vault_addr}"
 ssh_mount_point = "ssh"
 tls_skip_verify = false
 allowed_roles = "client_otp_dev_role"
