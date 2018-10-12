@@ -13,6 +13,11 @@ variable "vpc_security_group_ids" {
 
 variable "workspace" {
   description = "Workspace to use for SSH mount"
+  type        = "string"
+}
+
+variable "key_name" {
+  description = "Name of the key pair to use"
   type = "string"
 }
 

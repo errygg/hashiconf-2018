@@ -18,8 +18,8 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/userdata.sh.tpl")}"
   
   vars {
-    vault_addr     = "${var.vault_addr}"
-    workspace      = "${var.workspace}"
+    vault_addr = "${var.vault_addr}"
+    workspace  = "${var.workspace}"
   }
 }
 
@@ -27,6 +27,7 @@ resource "aws_instance" "otp_client" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
 
+  key_name               = "${var.key_name}"
   user_data              = "${data.template_file.userdata.rendered}"
   subnet_id              = "${var.subnet_id}"
   vpc_security_group_ids = ["${var.vpc_security_group_ids}"]
