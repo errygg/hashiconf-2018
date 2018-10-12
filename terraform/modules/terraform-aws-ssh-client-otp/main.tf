@@ -19,6 +19,7 @@ data "template_file" "userdata" {
   
   vars {
     vault_addr     = "${var.vault_addr}"
+    workspace      = "${var.workspace}"
   }
 }
 

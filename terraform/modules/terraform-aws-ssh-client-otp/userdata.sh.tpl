@@ -35,3 +35,7 @@ service sshd restart
 echo "Create user 'bob'"
 useradd -ms /bin/bash bob
 usermod -aG sudo bob
+
+echo "Create user 'ubuntu'"
+useradd -ms /bin/bash ubuntu
+usermod -aG subo ubuntu
