@@ -1,9 +1,10 @@
 provider "aws" {}
 
+# TODO: move this to the workspaces since it is workspace name specific
 data "terraform_remote_state" "secrets" {
   backend = "atlas"
   config {
-    name = "erik-rygg/secrets-aws-dev-us-west-2-quick"
+    name = "erik-rygg/vault-hashiconf-aws-us-west-2"
   }
 }
 
@@ -38,6 +39,7 @@ resource "aws_instance" "otp_client" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
 
+  # TODO: make these data objects vars and move data refs to workspace
   key_name               = "${data.terraform_remote_state.secrets.ssh_key_name}"
   user_data              = "${data.template_file.userdata.rendered}"
   subnet_id              = "${data.terraform_remote_state.secrets.subnet_public_ids.0}"
