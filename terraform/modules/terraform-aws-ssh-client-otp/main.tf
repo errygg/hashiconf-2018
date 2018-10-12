@@ -27,9 +27,9 @@ data "template_file" "user_data" {
   template = "${file("${path.module}/user_data.sh.tpl")}"
   
   vars {
-    consul_version  = "${vars.consul_version}"
-    consul_url      = "${vars.consul_url}"
-    trusted_user_ca = "${vars.trusted_user_ca}"
+    consul_version  = "${var.consul_version}"
+    consul_url      = "${var.consul_url}"
+    trusted_user_ca = "${var.trusted_user_ca}"
   }
 }
 
