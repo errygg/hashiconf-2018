@@ -29,6 +29,6 @@ resource "aws_instance" "ca_client" {
   key_name               = "${var.key_name}"
   user_data              = "${data.template_file.userdata.rendered}"
   subnet_id              = "${var.subnet_id}"
-  vpc_security_group_ids = "${var.vpc_security_group_ids}"
+  vpc_security_group_ids = ["${var.vpc_security_group_ids}"]
 }
 
