@@ -21,20 +21,12 @@ allowed_cidr_list="0.0.0.0/0"
 EOF
 
 echo "Update PAM sshd configuration"
-sed -i '/@include common-auth/\
-# HashiConf 2018: redirect pam authentications to exec the vault-ssh-helper instead of the common-auth\
-#@include common-auth\
+sed -i -e 's/@include common-auth/#@include common-auth/' -e '/#@include common-auth/ i\
 auth requisite pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -dev -config=/etc/vault-ssh-helper.d/config.hcl\
-# HashiConf 2018: ensure pam cleans up successfully\
 auth optional pam_unix.so not_set_pass use_first_pass nodelay' /etc/pam.d/sshd
 
 echo "Update sshd configuration"
-sed -i '/ChallengeResponseAuthentication no/\
-# HashiConf 2018: enable interactive keyboard\
-ChallengeResponseAuthentication yes' /etc/ssh/sshd_config
-sed -i '/UsePAM no/\
-# HashiConf 2018: enable PAM\
-UsePAM yes' /etc/ssh/sshd_config
+sed -i -e '/ChallengeResponseAuthentication/ s/no/yes/' -e '/UsePAM/ s/no/yes/' /etc/ssh/sshd_config
 
 service sshd restart
 
