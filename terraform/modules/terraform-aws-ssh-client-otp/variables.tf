@@ -4,6 +4,7 @@
 variable "allowed_cidrs" {
   description = "CIDR addresses allowed by Vault (comma-delimited list)"
   type        = "string"
+  default     = "false"
 }
 
 variable "allowed_roles" {
