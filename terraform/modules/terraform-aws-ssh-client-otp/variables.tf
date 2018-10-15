@@ -1,6 +1,26 @@
 #
 # Required Variables
 #
+variable "allowed_cidrs" {
+  description = "CIDR addresses allowed by Vault (comma-delimited list)"
+  type        = "string"
+}
+
+variable "allowed_roles" {
+  description = "Vault roles allowed to ssh to this instance (comma-delimited list)"
+  type        = "string"
+}
+
+variable "key_name" {
+  description = "Name of the key pair to use"
+  type        = "string"
+}
+
+variable "namespace" {
+  description = "Namespace to use for SSH mount"
+  type        = "string"
+}
+
 variable "subnet_id" {
   description = "Subnet ID to place this instance in"
   type        = "string"
@@ -9,16 +29,6 @@ variable "subnet_id" {
 variable "vpc_security_group_ids" {
   description = "Security group ID(s)"
   type        = "list"
-}
-
-variable "workspace" {
-  description = "Workspace to use for SSH mount"
-  type        = "string"
-}
-
-variable "key_name" {
-  description = "Name of the key pair to use"
-  type        = "string"
 }
 
 #
