@@ -20,7 +20,8 @@ allowed_roles = "*"
 EOF
 
 echo "Update PAM sshd configuration"
-sed -i 's/@include common-auth/#@include common-auth/ i\
+sed -i 's/@include common-auth/#@include common-auth/ i\' /etc/pam.d/sshd
+sed -i '/#@include common-auth/ i\
 auth [success=1 default=ignore] pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -dev -config=/etc/vault-ssh-helper.d/config.hcl\
 auth optional pam_unix.so not_set_pass use_first_pass nodelay' /etc/pam.d/sshd
 
