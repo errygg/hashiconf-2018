@@ -1,11 +1,11 @@
 #
 # Required Variables
 #
-variable "allowed_cidrs" {
-  description = "CIDR addresses allowed by Vault (comma-delimited list)"
-  type        = "string"
-  default     = "false"
-}
+// variable "allowed_cidrs" {
+//   description = "CIDR addresses allowed by Vault (comma-delimited list)"
+//   type        = "string"
+//   default     = "false"
+// }
 
 variable "allowed_roles" {
   description = "Vault roles allowed to ssh to this instance (comma-delimited list)"
