@@ -24,8 +24,8 @@ data "template_file" "userdata" {
 }
 
 resource "aws_instance" "otp_client" {
-  #ami           = "${data.aws_ami.ubuntu.id}"
-  ami = "ami-09c6e771"
+  ami           = "${data.aws_ami.ubuntu.id}"
+  #ami = "ami-09c6e771"
   instance_type = "t2.micro"
 
   key_name               = "${var.key_name}"
