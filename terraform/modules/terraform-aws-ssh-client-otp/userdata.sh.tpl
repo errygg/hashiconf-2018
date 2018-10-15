@@ -17,7 +17,6 @@ vault_addr = "http://${vault_addr}"
 ssh_mount_point = "${namespace}/ssh"
 tls_skip_verify = true
 allowed_roles = "${roles}"
-#allowed_cidr_list="${cidrs}"
 allowed_cidr_list="0.0.0.0/0"
 EOF
 

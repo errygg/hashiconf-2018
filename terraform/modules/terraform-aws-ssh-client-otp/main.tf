@@ -17,7 +17,6 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/userdata.sh.tpl")}"
   
   vars {
-    #cidrs      = "${var.allowed_cidrs ? var.allowed_cidrs : aws_instance.otp_client.public_ip}"
     namespace  = "${var.namespace}"
     roles      = "${var.allowed_roles}"
     vault_addr = "${var.vault_addr}"
