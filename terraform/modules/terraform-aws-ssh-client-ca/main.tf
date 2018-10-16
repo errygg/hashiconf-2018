@@ -1,5 +1,6 @@
 data "aws_ami" "ubuntu" {
   most_recent = true
+  owners      = ["099720109477"] # Canonical
 
   filter {
     name   = "name"
@@ -10,15 +11,14 @@ data "aws_ami" "ubuntu" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
-  owners = ["099720109477"] # Canonical
 }
 
 data "template_file" "userdata" {
   template = "${file("${path.module}/userdata.sh.tpl")}"
   
   vars {
-    trusted_user_ca = "${var.trusted_user_ca}"
+    namespace  = "${var.namespace}"
+    vault_addr = "${var.vault_addr}"
   }
 }
 
@@ -27,8 +27,8 @@ resource "aws_instance" "ca_client" {
   instance_type = "t2.micro"
 
   key_name               = "${var.key_name}"
-  user_data              = "${data.template_file.userdata.rendered}"
   subnet_id              = "${var.subnet_id}"
+  user_data              = "${data.template_file.userdata.rendered}"
   vpc_security_group_ids = ["${var.vpc_security_group_ids}"]
 }
 
