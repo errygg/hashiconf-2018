@@ -1,10 +1,11 @@
-# terraform-aws-ssh-client Module
+# terraform-aws-ssh-client-otp Module
 
 This module is used to build up an SSH one-time password client instance to use
 with the demo for my talk at HashiConf 2018 -
 [Manage SSH with HashiCorp Vault]().
 
 ## Variables
+
 | Name | Description |
 |------|-------------|
 | allowed_roles | Vault roles allowed to ssh to this instance (comma-delimited list) |

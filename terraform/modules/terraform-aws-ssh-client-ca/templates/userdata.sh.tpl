@@ -6,7 +6,7 @@ echo "Update packages and install vault-ssh-helper"
 apt-get update
 apt-get install -y unzip
 
-echo "\n\nTrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem" >> /etc/ssh/sshd_config
+echo "TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem" >> /etc/ssh/sshd_config
 curl -o /etc/ssh/trusted-user-ca-keys.pem ${vault_addr}/v1/${namespace}/ssh/public_key
 chmod 600 /etc/ssh/trusted-user-ca-keys.pem
 service sshd restart

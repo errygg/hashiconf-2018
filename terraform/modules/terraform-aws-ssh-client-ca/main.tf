@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu" {
 }
 
 data "template_file" "userdata" {
-  template = "${file("${path.module}/userdata.sh.tpl")}"
+  template = "${file("${path.module}/templates/userdata.sh.tpl")}"
   
   vars {
     namespace  = "${var.namespace}"

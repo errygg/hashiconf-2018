@@ -1,4 +1,0 @@
-output "" {
-  description = ""
-  value       = ""
-}

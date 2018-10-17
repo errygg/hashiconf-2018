@@ -103,10 +103,10 @@ Exit out and try the password again and we'll see you can't login. OTP FTW!
   > ssh suzy@<IP address of CA instance>
 ```
 
-6. Sign the local ssh key
+6. Sign the local ssh key, putting it next to the default key allows a simpler ssh command
 
 ```bash
-  > vault write -field=signed_key ssh/sign/user-role public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
+  > vault write -namespace=db-developers -field=signed_key ssh/sign/db-developers public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
   > chmod 600 ~/.ssh/id_rsa-cert.pub
 ```
 

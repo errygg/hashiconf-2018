@@ -4,6 +4,7 @@ This module is used to build up an SSH CA client instance to use with the demo
 for my talk at HashiConf 2018 - [Manage SSH with HashiCorp Vault]().
 
 ## Variables
+
 | Name | Description |
 |------|-------------|
 | key_name | SSH key name |

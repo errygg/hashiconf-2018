@@ -1,0 +1,12 @@
+{
+  "allow_user_certificates": true,
+  "allowed_users": "suzy",
+  "default_extensions": [
+    {
+      "permit-pty": ""
+    }
+  ],
+  "key_type": "ca",
+  "default_user": "suzy",
+  "ttl": "60s"
+}
