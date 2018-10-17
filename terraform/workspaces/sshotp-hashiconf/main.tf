@@ -8,7 +8,7 @@ data "terraform_remote_state" "vault" {
 module "ssh_client_otp" {
   source = "../../modules/terraform-aws-ssh-client-otp"
   
-  allowed_roles          = "web-developers"
+  allowed_roles          = "vampires"
   key_name               = "${data.terraform_remote_state.vault.ssh_key_name}"
   namespace              = "vampires"
   subnet_id              = "${data.terraform_remote_state.vault.subnet_public_ids.0}"

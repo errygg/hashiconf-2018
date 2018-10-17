@@ -6,11 +6,12 @@ This repo holds the notes, slides, and configurations for my talk at HashiConf 2
 
 The demo for this talk includes an enterprise versions of Vault and Consul using Terraform Enterprise (https://app.terraform.io) to setup all the infrastructure. More specifically, the following explains the setup:
 
-* 3 node Vault cluster with a 3 node Consul cluster
+* Terraform Enterprise is used to spin up the Vault/Consul clusters
+* 3 node Vault Enterprise cluster with a 3 node Consul Enterprise cluster
 * Vault is publicly accessible via AWS load balancer endpoint
 * Consul is only accessible to Vault
 * Script is used to setup the Vault SSH Secrets Engine and associated roles
-* Terraform Enterprise is used to spin up the SSH clients in 2 seperate workspaces
+* Terraform Enterprise is used to spin up the SSH clients in 2 separate workspaces
 
 The Terraform workspace used to build the Vault/Consul cluster is located at: https://github.com/errygg/vault-guides/tree/master/operations/provision-vault/quick-start/terraform-aws.
 
@@ -20,7 +21,7 @@ place of the UI.
 
 > Note: This demo uses configuration for Vault SSH found here: https://www.vaultproject.io/api/secret/ssh/index.html
 
-### Spint up and Configure Vault
+### Spin up and Configure Vault
 
 1. Run the terraform workspace to spin up the Vault/Consul cluster
 
@@ -40,25 +41,26 @@ place of the UI.
 
 1. Spin up the OTP client via Terraform Enterprise
 
-2. Create the OTP role for the `web-developers` users
+2. Create the OTP role for the `vampire` users as the root user
 
 ```bash
-  > vault write -namespace=web-developers ssh/roles/web-developers key_type=otp default_user=bob cidr_list="<IP address of OTP instance>/32"
+  > . ./scripts/vault_env.sh <VAULT_ADDR> <credentials json file>
+  > vault write --namespace=vampires ssh/roles/vampires key_type=otp default_user=bob cidr_list="<IP address of OTP instance>/32"
 ```
 
-### Login with Bob
+### Login with Bob the Vampire
 
-1. Authenticate with Vault
+1. Authenticate with Vault as Bob
 
 ```bash
-  > export VAULT_ADDR=<Vault URL>
-  > export VAULT_TOKEN=`vault login -token-only -method=userpass -namespace=web-developers username=bob`
+  > export VAULT_NAMESPACE=vampires
+  > export VAULT_TOKEN=`vault login -token-only -method=userpass username=bob`
 ```
 
 2. Get the OTP for the client
 
 ```bash
-  > vault ssh -role web-developers -mode otp -strict-host-key-checking=no bob@<IP address of OTP instance>
+  > vault write ssh/creds/web-developers ip=<IP address of OTP instance>
 ```
 
 3. SSH into the client
@@ -87,30 +89,30 @@ Exit out and try the password again and we'll see you can't login. OTP FTW!
 1. Authenticate with Vault
 
 ```bash
-  > export VAULT_ADDR=<Vault URL>
-  > export VAULT_TOKEN=`vault login -token-only -method=userpass -namepsace=db-developers username=suzy`
+  > export VAULT_NAMESPACE=zombies
+  > export VAULT_TOKEN=`vault login -token-only -method=userpass username=suzy`
 ```
 
 2. Public key is accessible via the `/public_key` endpoint
 
 ```bash
-  > curl http://localhost:8200/v1/ssh/public_key
+  > curl http://<VAULT_ADDR>/v1/ssh/public_key
 ```
 
-4. Test that we can't actually ssh to the node via the Suzy user
+3. Test that we can't actually ssh to the node as Suzy
 
 ```bash
   > ssh suzy@<IP address of CA instance>
 ```
 
-6. Sign the local ssh key, putting it next to the default key allows a simpler ssh command
+4. Sign the local ssh key, putting it next to the default key allows a simpler ssh command
 
 ```bash
-  > vault write -namespace=db-developers -field=signed_key ssh/sign/db-developers public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
+  > vault write -field=signed_key ssh/sign/zombies public_key=@$HOME/.ssh/id_rsa.pub > ~/.ssh/id_rsa-cert.pub
   > chmod 600 ~/.ssh/id_rsa-cert.pub
 ```
 
-7. SSH into the instance with our new signed key
+5. SSH into the instance with our new signed key
 
 ```bash
   > ssh suzy@<IP address of CA instance>
