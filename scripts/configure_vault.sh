@@ -2,8 +2,6 @@
 
 # Run this script using root Vault token
 
-unset VAULT_NAMESPACE
-
 # OTP users
 echo "Configure the ssh secrets engine for SSH OTP"
 vault secrets enable ssh
