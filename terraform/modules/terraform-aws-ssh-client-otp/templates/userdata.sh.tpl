@@ -22,13 +22,14 @@ EOF
 
 echo "Update PAM sshd configuration"
 sed -i -e 's/@include common-auth/#@include common-auth/' -e '/#@include common-auth/ i\
-auth requisite pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -dev -config=/etc/vault-ssh-helper.d/config.hcl\
-auth optional pam_unix.so not_set_pass use_first_pass nodelay' /etc/pam.d/sshd
+auth    [success=2 default=ignore]      pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -config=/etc/vault-ssh-helper.d/config.hcl -dev\
+auth    [success=1 default=ignore]      pam_unix.so nullok_secure' /etc/pam.d/sshd
 
 echo "Update sshd configuration"
 sed -i -e '/ChallengeResponseAuthentication/ s/no/yes/' -e '/UsePAM/ s/no/yes/' /etc/ssh/sshd_config
 
-service sshd restart
+service sshd stop
+service sshd start
 
 echo "Create user 'bob'"
 useradd -ms /bin/bash bob

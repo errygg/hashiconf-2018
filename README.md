@@ -60,7 +60,7 @@ place of the UI.
 2. Get the OTP for the client
 
 ```bash
-  > vault write ssh/creds/web-developers ip=<IP address of OTP instance>
+  > vault write ssh/creds/vampires ip=<IP address of OTP instance>
 ```
 
 3. SSH into the client
