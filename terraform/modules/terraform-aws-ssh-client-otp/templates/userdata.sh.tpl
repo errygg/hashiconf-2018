@@ -21,9 +21,11 @@ allowed_cidr_list="0.0.0.0/0"
 EOF
 
 echo "Update PAM sshd configuration"
-sed -i -e 's/@include common-auth/#@include common-auth/' -e '/#@include common-auth/ i\
+sed -i -e 's/@include common-auth/#@include common-auth/' -e '/#@include common-auth/ a\
 auth    [success=2 default=ignore]      pam_exec.so quiet expose_authtok log=/tmp/vaultssh.log /usr/local/bin/vault-ssh-helper -config=/etc/vault-ssh-helper.d/config.hcl -dev\
-auth    [success=1 default=ignore]      pam_unix.so nullok_secure' /etc/pam.d/sshd
+auth    [success=1 default=ignore]      pam_unix.so nullok_secure\
+auth    requisite                       pam_deny.so\
+auth    required                        pam_permit.so' /etc/pam.d/sshd
 
 echo "Update sshd configuration"
 sed -i -e '/ChallengeResponseAuthentication/ s/no/yes/' -e '/UsePAM/ s/no/yes/' /etc/ssh/sshd_config
