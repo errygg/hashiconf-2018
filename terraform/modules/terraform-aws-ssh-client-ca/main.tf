@@ -17,7 +17,6 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/templates/userdata.sh.tpl")}"
   
   vars {
-    namespace  = "${var.namespace}"
     vault_addr = "${var.vault_addr}"
   }
 }

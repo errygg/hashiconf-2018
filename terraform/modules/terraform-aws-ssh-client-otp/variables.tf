@@ -17,11 +17,6 @@ variable "key_name" {
   type        = "string"
 }
 
-variable "namespace" {
-  description = "Namespace to use for SSH mount"
-  type        = "string"
-}
-
 variable "subnet_id" {
   description = "Subnet ID to place this instance in"
   type        = "string"

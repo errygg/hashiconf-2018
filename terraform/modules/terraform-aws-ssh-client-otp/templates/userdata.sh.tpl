@@ -14,7 +14,7 @@ wget https://releases.hashicorp.com/vault-ssh-helper/0.1.4/vault-ssh-helper_0.1.
 echo "Create vault-ssh-helper configuration"
 cat << EOF > /etc/vault-ssh-helper.d/config.hcl
 vault_addr = "http://${vault_addr}"
-ssh_mount_point = "${namespace}/ssh"
+ssh_mount_point = "/ssh"
 tls_skip_verify = true
 allowed_roles = "${roles}"
 allowed_cidr_list="0.0.0.0/0"

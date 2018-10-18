@@ -10,7 +10,6 @@ module "ssh_client_otp" {
   
   allowed_roles          = "vampires"
   key_name               = "${data.terraform_remote_state.vault.ssh_key_name}"
-  namespace              = "vampires"
   subnet_id              = "${data.terraform_remote_state.vault.subnet_public_ids.0}"
   vault_addr             = "${data.terraform_remote_state.vault.vault_lb_dns}"
   vpc_security_group_ids = ["${data.terraform_remote_state.vault.bastion_security_group}"]
