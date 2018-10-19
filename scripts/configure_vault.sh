@@ -10,6 +10,7 @@ vault policy write vampires ./policies/vampires.hcl
 echo "Configure the auth backend for SSH OTP"
 vault auth enable userpass
 vault write auth/userpass/users/bob password="password" policies=vampires
+vault write ssh/roles/vampires @./roles/vampires.json
 
 # CA users
 echo "Configure the ssh secrets engine for SSH CA"

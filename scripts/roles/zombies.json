@@ -8,5 +8,5 @@
   ],
   "key_type": "ca",
   "default_user": "suzy",
-  "ttl": "60s"
+  "ttl": "30s"
 }
