@@ -18,6 +18,5 @@ vault write ssh/config/ca generate_signing_key=true
 vault policy write zombies ./policies/zombies.hcl
 
 echo "Configure the auth backend for SSH CA"
-vault auth enable userpass
 vault write auth/userpass/users/suzy password="password" policies=zombies
 vault write ssh/roles/zombies @./roles/zombies.json

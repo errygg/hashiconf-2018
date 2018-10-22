@@ -41,3 +41,15 @@
 > Control-g
 
 > vault ssh -role=zombies -mode=otp suzy@<IP>
+
+# Auditing
+Use UI if available
+
+# Failure Scenarios
+
+## Try logging into vampires with Suzy
+
+## Try logging into zombies with Bob
+
+## Delete Bob and try to login OTP
+

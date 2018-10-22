@@ -45,7 +45,7 @@ place of the UI.
 
 ```bash
   > . ./scripts/vault_env.sh <VAULT_ADDR> <credentials json file>
-  > vault write --namespace=vampires ssh/roles/vampires key_type=otp default_user=bob cidr_list="<IP address of OTP instance>/32"
+  > vault write ssh/roles/vampires key_type=otp default_user=bob cidr_list="<IP address of OTP instance>/32"
 ```
 
 ### Login with Bob the Vampire
@@ -53,14 +53,13 @@ place of the UI.
 1. Authenticate with Vault as Bob
 
 ```bash
-  > export VAULT_NAMESPACE=vampires
   > export VAULT_TOKEN=`vault login -token-only -method=userpass username=bob`
 ```
 
 2. Get the OTP for the client
 
 ```bash
-  > vault write ssh/creds/vampires ip=<IP address of OTP instance>
+  > vault ssh -role=vampires -mode=otp -strict-host-key-checking=no bob@<IP address of OTP instance>
 ```
 
 3. SSH into the client
