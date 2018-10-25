@@ -1,7 +1,12 @@
 # Manage the SSH backend
-path "ssh/*" {
+path "ssh/creds/vampires/*" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
+
+path "ssh/creds/vampires" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
+
 
 path "sys/mounts" {
    capabilities = ["read"]

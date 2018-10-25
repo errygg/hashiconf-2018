@@ -1,5 +1,13 @@
 # Manage the SSH backend
-path "ssh/*" {
+path "ssh/creds/zombies/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
+
+path "ssh/sign/zombies/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
+
+path "ssh/sign/zombies" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
 

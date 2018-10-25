@@ -43,13 +43,11 @@
 > vault ssh -role=zombies -mode=otp suzy@<IP>
 
 # Auditing
-Use UI if available
+Show vault audit logs
 
 # Failure Scenarios
 
-## Try logging into vampires with Suzy
+Try logging into vampires with Suzy, show the logs
 
-## Try logging into zombies with Bob
-
-## Delete Bob and try to login OTP
+Try logging into zombies with Bob, show the logs
 

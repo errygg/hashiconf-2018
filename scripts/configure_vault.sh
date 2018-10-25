@@ -20,3 +20,6 @@ vault policy write zombies ./policies/zombies.hcl
 echo "Configure the auth backend for SSH CA"
 vault write auth/userpass/users/suzy password="password" policies=zombies
 vault write ssh/roles/zombies @./roles/zombies.json
+
+echo "Enable auditing"
+vault audit enable file file_path=/tmp/vault_audit.log
